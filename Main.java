@@ -5,6 +5,8 @@ import java.util.Map;
 import java.lang.reflect.Method; 
 import java.lang.reflect.Field; 
 import java.lang.reflect.Constructor; 
+import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 class Main {
   public static void main(String[] args) {
@@ -17,30 +19,30 @@ class Main {
 
     Map<Integer, String> testeMap = lista.stream().collect(Collectors.toMap(Teste::getId,Teste::getName));
 
-    System.out.println("Map");
+    System.out.println("\nMap");
     for (Map.Entry<Integer, String> entry : testeMap.entrySet())
       System.out.println(String.format("ID: %s, Name: %s", entry.getKey(), entry.getValue()));
 
     List<Integer> idLista = testeMap.keySet().stream().collect(Collectors.toList());
 
-    System.out.println("lista de IDs");
+    System.out.println("\nlista de IDs");
     for (Integer id : idLista)
       System.out.println("ID " + id);
 
     List<String> nameLista = testeMap.values().stream().collect(Collectors.toList());
 
-    System.out.println("lista de nomes");
+    System.out.println("\nlista de nomes");
     for (String name : nameLista)
       System.out.println("Name " + name );
 
     List<Teste> lista2 = testeMap.entrySet().stream().map(x -> new Teste(x.getKey(), x.getValue())).collect(Collectors.toList());
 
-    System.out.println("lista2");
+    System.out.println("\nlista2");
     lista2.forEach(System.out::println);
 
     Class clazz = Teste.class;
 
-    System.out.println("\n\nReflection:");
+    System.out.println("\nReflection:");
 
 
     try { 
@@ -63,6 +65,15 @@ class Main {
       System.out.println(e);
     }
 
+    System.out.println("\nLambda");
+
+    Consumer<Teste> print = (value) ->  System.out.println("Valor printado: " + value); 
+
+    lista.forEach(print);
+
+    BiConsumer<Integer,String> printMap = (k,v) -> System.out.println(String.format("ID: %s, Name : %s",k,v));
+
+    testeMap.forEach(printMap);
 
 
   }
@@ -91,3 +102,4 @@ class Teste {
       return String.format("Name: %s, ID: %s", getName(), getId());
     }
 }
+
